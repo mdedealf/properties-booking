@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/navbar/Navbar";
 import RegisterModal from "@/modals/RegisterModal";
 import LoginModal from "@/modals/LoginModal";
+import { Toaster } from "react-hot-toast";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -28,6 +29,7 @@ export default function RootLayout({
         <div className="mt-20 lg:mt-28 px-4 md:px-20 py-2">{children}</div>
         <RegisterModal />
         <LoginModal />
+        <Toaster />
       </body>
     </html>
   );

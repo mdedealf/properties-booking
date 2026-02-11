@@ -5,9 +5,131 @@ import Modal from "./Modal";
 import Button from "@/components/ui/Button";
 import { FcGoogle } from "react-icons/fc";
 import Input from "@/components/ui/Input";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
+
+interface LoginValues {
+  email: string;
+  password: string;
+}
+
+type LoginErrors = Partial<Record<keyof LoginValues, string>>;
 
 const LoginModal = () => {
   const { isLoginOpen, closeLogin, openRegister } = useAuthModal();
+
+  const [values, setValues] = useState<LoginValues>({
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState<LoginErrors>({});
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    setValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: undefined,
+    }));
+  };
+
+  const validate = () => {
+    const newErrors: LoginErrors = {};
+
+    if (!values.email.trim()) {
+      newErrors.email = "Email field is required!";
+    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+      newErrors.email = "Enter a valid email!";
+    }
+
+    if (!values.password.trim()) {
+      newErrors.password = "Password field is required!";
+    } else if (values.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters!";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const onSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+
+    if (!validate()) return;
+
+    setLoading(true);
+
+    try {
+      const { error } = await authClient.signIn.email({
+        email: values.email,
+        password: values.password,
+      });
+
+      if (error) {
+        toast(error.message as string, {
+          style: {
+            background: "#FF5A5F",
+            color: "white",
+          },
+        });
+        return;
+      }
+
+      toast("Logged in successful!", {
+        style: {
+          background: "#e7db33",
+          color: "white",
+        },
+      });
+
+      setValues({
+        email: "",
+        password: "",
+      });
+      closeLogin();
+      router.refresh();
+    } catch (error) {
+      toast(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong, please try again.",
+        {
+          style: {
+            background: "#FF5A5F",
+            color: "white",
+          },
+        },
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+      });
+    } catch {
+      toast("Google signin failed", {
+        style: {
+          background: "#FF5A5F",
+          color: "white",
+        },
+      });
+    }
+  };
 
   return (
     <Modal onClose={closeLogin} isOpen={isLoginOpen} title="Login">
@@ -20,22 +142,26 @@ const LoginModal = () => {
       </div>
 
       {/* Form */}
-      <form className="space-y-8">
+      <form onSubmit={onSubmit} className="space-y-8">
         <Input
           label="Email"
           name="email"
           type="text"
-          value={""}
-          onChange={() => {}}
+          value={values.email}
+          error={errors.email}
+          onChange={handleChange}
         />
         <Input
           label="Password"
           name="password"
-          type="text"
-          value={""}
-          onChange={() => {}}
+          type="password"
+          value={values.password}
+          error={errors.password}
+          onChange={handleChange}
         />
-        <Button type="submit">Login</Button>
+        <Button disabled={loading} loading={loading} type="submit">
+          Login
+        </Button>
 
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
@@ -46,7 +172,12 @@ const LoginModal = () => {
           </div>
         </div>
 
-        <Button type="button" variant="outline" icon={<FcGoogle size={22} />}>
+        <Button
+          onClick={signInWithGoogle}
+          type="button"
+          variant="outline"
+          icon={<FcGoogle size={22} />}
+        >
           Continue with Google
         </Button>
 
