@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
         <Navbar />
-        {children}
+        <div className="mt-20 lg:mt-28 px-4 md:px-20 py-2">{children}</div>
         <RegisterModal />
         <LoginModal />
       </body>

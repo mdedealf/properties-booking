@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Listing {
+  id String @id @default(cuid())
+  title String
+  description String
+  imageSrc String
+  category String
+  roomCount Int
+  guestCount Int
+  bathroomCount Int
+  price Int
+  locationValue String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+
+  @@index([userId])
+  @@index([locationValue])
+  @@index([category])
+  @@map("listing")
+}
+
+model Reservation {
+  id String @id @default(cuid())
+  startDate DateTime
+  endDate DateTime
+  totalPrice Int
+  
+  createdAt DateTime @default(now())
+
+  userId String
+
+  listingId String
+
+  @@index([listingId])
+  @@index([userId])
+  @@map("reservation")
+}

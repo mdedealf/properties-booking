@@ -1,5 +1,4 @@
 import ListingCard from "@/components/listings/ListingCard";
-import Container from "@/layouts/Container";
 
 const listings = [
   {
@@ -62,12 +61,10 @@ const listings = [
 
 export default function Home() {
   return (
-    <Container>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {listings.map((listing) => (
-          <ListingCard listing={listing} key={listing.id} />
-        ))}
-      </div>
-    </Container>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      {listings.map((listing) => (
+        <ListingCard listing={listing} key={listing.id} />
+      ))}
+    </div>
   );
 }
