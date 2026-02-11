@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -8,21 +9,24 @@ datasource db {
 }
 
 model Listing {
-  id String @id @default(cuid())
-  title String
-  description String
-  imageSrc String
-  category String
-  roomCount Int
-  guestCount Int
+  id            String @id @default(cuid())
+  title         String
+  description   String
+  imageSrc      String
+  category      String
+  roomCount     Int
+  guestCount    Int
   bathroomCount Int
-  price Int
+  price         Int
   locationValue String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  reservations Reservation[]
 
   @@index([userId])
   @@index([locationValue])
@@ -31,18 +35,86 @@ model Listing {
 }
 
 model Reservation {
-  id String @id @default(cuid())
-  startDate DateTime
-  endDate DateTime
+  id         String   @id @default(cuid())
+  startDate  DateTime
+  endDate    DateTime
   totalPrice Int
-  
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
 
   userId String
+   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   listingId String
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
   @@index([listingId])
   @@index([userId])
   @@map("reservation")
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  listings Listing[] 
+  reservations Reservation[]
+  favoriteIds String[] @default([])
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }
