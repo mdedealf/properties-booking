@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #FF5A5F
+  --color-primary: #ff5a5f;
+}
+
+.leaflet-container {
+  z-index: 0 !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
