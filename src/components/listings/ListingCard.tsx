@@ -1,27 +1,23 @@
+import { Listing } from "@/generated/prisma/client";
+import useCountries from "@/hooks/useCountries";
 import Image from "next/image";
 import { LuHeart } from "react-icons/lu";
-
-interface Listing {
-  id: number;
-  title: string;
-  location: string;
-  image: string;
-  price: number;
-}
 
 interface ListingCardProps {
   listing: Listing;
 }
 
 const ListingCard = ({ listing }: ListingCardProps) => {
-  const { title, location, image, price } = listing;
+  const { title, locationValue, imageSrc, price } = listing;
+  const { getByValue } = useCountries();
+  const location = getByValue(locationValue);
 
   return (
     <div className="group cursor-pointer">
       {/* Image */}
       <div className="relative aspect-square rounded-xl overflow-hidden">
         <Image
-          src={image}
+          src={imageSrc || ""}
           alt={title}
           fill
           className="object-cover transition group-hover:scale-105"
@@ -33,7 +29,9 @@ const ListingCard = ({ listing }: ListingCardProps) => {
       </div>
 
       <div className="space-y-1 mt-3 text-sm">
-        <p className="text-gray-500">{location}</p>
+        <p className="text-gray-500">
+          {location ? `${location.region}, ${location.label}` : locationValue}
+        </p>
         <p className="text-gray-900 truncate">{title}</p>
         <p className="pt-1">
           <span className="font-semibold text-gray-900">${price}</span>
