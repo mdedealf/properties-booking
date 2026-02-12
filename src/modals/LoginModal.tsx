@@ -88,7 +88,7 @@ const LoginModal = () => {
 
       toast("Logged in successful!", {
         style: {
-          background: "#e7db33",
+          background: "#32c061",
           color: "white",
         },
       });

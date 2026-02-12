@@ -8,10 +8,13 @@ import { useAuthModal } from "@/store/useAuthModalStore";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import useCreateListingModal from "@/store/useCreateListingModal";
 
 const Navbar = () => {
   const { data: session, isPending } = authClient.useSession();
   const { openRegister, openLogin } = useAuthModal();
+  const { open: openCreateListing } = useCreateListingModal();
 
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -29,6 +32,12 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await authClient.signOut();
+    toast("Logged out successful!", {
+      style: {
+        background: "#32c061",
+        color: "white",
+      },
+    });
     router.refresh();
   };
 
@@ -67,7 +76,10 @@ const Navbar = () => {
         {/* Right navbar */}
         <div className="flex items-center gap-4 relative" ref={menuRef}>
           {session && !isPending && (
-            <button className="hiddem md:block text-sm font-medium px-4 py-2 rounded-full bg-gray-50 cursor-pointer hover:bg-gray-100">
+            <button
+              onClick={openCreateListing}
+              className="hidden md:block text-sm font-medium px-4 py-2 rounded-full bg-gray-50 cursor-pointer hover:bg-gray-100"
+            >
               Airbnb your home
             </button>
           )}
@@ -106,7 +118,10 @@ const Navbar = () => {
                 <ul className="text-gray-800 text-sm">
                   {session && !isPending && (
                     <>
-                      <li className="px-4 py-3 hover:bg-gray-100 cursor-pointer">
+                      <li
+                        onClick={openCreateListing}
+                        className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
+                      >
                         Airbnb your home
                       </li>
                       <Link href="/favorites">
