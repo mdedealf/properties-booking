@@ -1,10 +1,12 @@
 "use client";
 
-import { Listing } from "@/generated/prisma/client";
 import useCountries from "@/hooks/useCountries";
 import Image from "next/image";
 import HeartButton from "../favorites/HeartButton";
 import { useRouter } from "next/navigation";
+import { Listing } from "@/types/listing";
+import { format } from "date-fns";
+import CancelReservationButton from "../reservations/CancelReservationButton";
 
 interface ListingCardProps {
   listing: Listing;
@@ -14,6 +16,15 @@ interface ListingCardProps {
   } | null;
   hideFavoriteButton?: boolean;
   property?: boolean;
+  reservation?: {
+    id: string;
+    startDate: string;
+    endDate: string;
+    totalPrice: number;
+  };
+
+  trip?: boolean;
+  actionLabel?: string;
 }
 
 const ListingCard = ({
@@ -21,6 +32,9 @@ const ListingCard = ({
   listing,
   hideFavoriteButton,
   property,
+  reservation,
+  actionLabel,
+  trip,
 }: ListingCardProps) => {
   const { title, locationValue, imageSrc, price } = listing;
   const { getByValue } = useCountries();
@@ -51,10 +65,22 @@ const ListingCard = ({
           {location ? `${location.region}, ${location.label}` : locationValue}
         </p>
         <p className="text-gray-900 truncate">{title}</p>
-        <p className="pt-1">
-          <span className="font-semibold text-gray-900">${price}</span>
-          <span className="text-gray-500"> / night</span>
-        </p>
+        {reservation ? (
+          <>
+            <p className="text-gray-500 text-sm">
+              {format(new Date(reservation.startDate), "MMM d")} -{" "}
+              {format(new Date(reservation.endDate), "MMM d")}
+            </p>
+            <p className="p-1 font-semibold text-gray-900">
+              ${reservation.totalPrice}
+            </p>
+          </>
+        ) : (
+          <p className="pt-1">
+            <span className="font-semibold text-gray-900">${price}</span>
+            <span className="text-gray-500"> / night</span>
+          </p>
+        )}
 
         {property && (
           <div className="mt-3">
@@ -62,6 +88,13 @@ const ListingCard = ({
               Listed on {new Date(listing.createdAt).toLocaleDateString()}
             </p>
           </div>
+        )}
+
+        {trip && reservation && actionLabel && (
+          <CancelReservationButton
+            actionLabel={actionLabel}
+            reservationId={reservation.id}
+          />
         )}
       </div>
     </div>

@@ -94,8 +94,7 @@ const BookingCard = ({
       });
 
       router.refresh();
-
-      // route the user to the trips page
+      router.push("/trips");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast(error.response?.data.error, {
