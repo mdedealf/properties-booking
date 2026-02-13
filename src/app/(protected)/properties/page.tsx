@@ -1,9 +1,9 @@
 import PropertiesPage from "@/components/properties/PropertiesPage"
 
-const page = () => {
+const Page = () => {
   return (
     <PropertiesPage/>
   )
 }
 
-export default page
+export default Page

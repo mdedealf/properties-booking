@@ -1,7 +1,10 @@
+"use client";
+
 import { Listing } from "@/generated/prisma/client";
 import useCountries from "@/hooks/useCountries";
 import Image from "next/image";
 import HeartButton from "../favorites/HeartButton";
+import { useRouter } from "next/navigation";
 
 interface ListingCardProps {
   listing: Listing;
@@ -10,19 +13,25 @@ interface ListingCardProps {
     favoriteIds: string[];
   } | null;
   hideFavoriteButton?: boolean;
+  property?: boolean;
 }
 
 const ListingCard = ({
   currentUser,
   listing,
   hideFavoriteButton,
+  property,
 }: ListingCardProps) => {
   const { title, locationValue, imageSrc, price } = listing;
   const { getByValue } = useCountries();
   const location = getByValue(locationValue);
+  const router = useRouter();
 
   return (
-    <div className="group cursor-pointer">
+    <div
+      onClick={() => router.push(`/listings/${listing.id}`)}
+      className="group cursor-pointer"
+    >
       {/* Image */}
       <div className="relative aspect-square rounded-xl overflow-hidden">
         <Image
@@ -46,6 +55,14 @@ const ListingCard = ({
           <span className="font-semibold text-gray-900">${price}</span>
           <span className="text-gray-500"> / night</span>
         </p>
+
+        {property && (
+          <div className="mt-3">
+            <p className="text-sm text-gray-500">
+              Listed on {new Date(listing.createdAt).toLocaleDateString()}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
