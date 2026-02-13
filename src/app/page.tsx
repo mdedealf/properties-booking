@@ -1,4 +1,5 @@
 import Listings from "@/components/listings/Listings";
+import { Suspense } from "react";
 
 export interface HomeProps {
   searchParams: {
@@ -10,5 +11,9 @@ export interface HomeProps {
 }
 
 export default function Home({ searchParams }: HomeProps) {
-  return <Listings searchParams={searchParams}/>;
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <Listings searchParams={searchParams} />
+    </Suspense>
+  );
 }
