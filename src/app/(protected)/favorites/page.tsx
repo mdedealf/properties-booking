@@ -1,7 +1,7 @@
 import FavoritesPage from "@/components/favorites/FavoritesPage";
 import { Suspense } from "react";
 
-const page = () => {
+const Page = () => {
   return (
     <Suspense fallback={<p>Loading...</p>}>
       <FavoritesPage />
@@ -9,4 +9,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

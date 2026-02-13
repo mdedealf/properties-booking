@@ -24,6 +24,7 @@ const PropertiesPage = async () => {
               key={listing.id}
               listing={listing}
               hideFavoriteButton={true}
+              property={true}
             />
           );
         })}

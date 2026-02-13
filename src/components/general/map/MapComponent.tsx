@@ -4,7 +4,7 @@ import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Popup, Marker } from "react-leaflet";
 
-interface MapComponentProps {
+export interface MapComponentProps {
   center: [number, number];
   price?: number;
 }
