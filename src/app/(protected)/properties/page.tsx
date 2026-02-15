@@ -1,9 +1,13 @@
-import PropertiesPage from "@/components/properties/PropertiesPage"
+import PropertiesPage from "@/components/properties/PropertiesPage";
+import ListingCardSkeleton from "@/components/skeletons/ListingCardSkeleton";
+import { Suspense } from "react";
 
 const Page = () => {
   return (
-    <PropertiesPage/>
-  )
-}
+    <Suspense fallback={<ListingCardSkeleton />}>
+      <PropertiesPage />
+    </Suspense>
+  );
+};
 
-export default Page
+export default Page;

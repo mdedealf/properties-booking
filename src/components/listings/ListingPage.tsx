@@ -2,6 +2,7 @@ import Image from "next/image";
 import BookingCard from "./BookingCard";
 import { getListing } from "@/server-actions/getListing";
 import ListingViewMap from "./ListingViewMap";
+import { LuBath, LuBedDouble, LuUsers } from "react-icons/lu";
 
 interface ListingPageProps {
   listingId: string;
@@ -20,7 +21,7 @@ const ListingPage = async ({ listingId }: ListingPageProps) => {
       </h2>
 
       {/* Hero image */}
-      <div className="relative w-full h-80 sm:h-120 lg:h-150 rounded-2xl overflow-hidden shadow-2xl mb-10">
+      <div className="relative w-full h-80 sm:h-110 lg:h-140 rounded-2xl overflow-hidden shadow-2xl mb-10">
         <Image
           src={listing.imageSrc}
           alt={listing.title}
@@ -32,7 +33,7 @@ const ListingPage = async ({ listingId }: ListingPageProps) => {
       {/* Main content */}
       <div className="flex flex-col lg:flex-row gap-10">
         {/* Leftside */}
-        <div className="flex-1">
+        <div className="flex-1 space-y-8">
           {/* Host info card */}
           <div className="flex items-center gap-3 rounded-2xl">
             <div className="relative w-14 h-14 rounded-full overflow-hidden border-4 border-white">
@@ -52,11 +53,31 @@ const ListingPage = async ({ listingId }: ListingPageProps) => {
                 />
               )}
             </div>
-            <div>
+            <div className="space-y-2">
               <h2 className="text-lg font-semibold text-gray-800">
                 Hosted by {listing.user.name}
               </h2>
-              <p className="text-gray-700 text-sm leading-relaxed">superhost</p>
+
+              <div className="flex items-center flex-wrap gap-3 text-sm text-neutral-600">
+                <div className="flex items-center gap-2 rounded-full border border-neutral-200 px-3 py-1.5">
+                  <LuUsers size={16} className="text-neutral-500" />
+                  <span className="font-medium text-neutral-800">
+                    {listing.guestCount} guests
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 rounded-full border border-neutral-200 px-3 py-1.5">
+                  <LuBedDouble size={16} className="text-neutral-500" />
+                  <span className="font-medium text-neutral-800">
+                    {listing.roomCount} rooms
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 rounded-full border border-neutral-200 px-3 py-1.5">
+                  <LuBath size={16} className="text-neutral-500" />
+                  <span className="font-medium text-neutral-800">
+                    {listing.bathroomCount} bath
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 

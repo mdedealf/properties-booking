@@ -36,7 +36,7 @@ export const useFavorite = ({ currentUser, listingId }: useFavoriteProps) => {
       }
 
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong");
     }
   };
