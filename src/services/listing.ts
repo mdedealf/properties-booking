@@ -9,7 +9,7 @@ export type GetListingsParams = {
 
 export const getListings = async (params?: GetListingsParams) => {
   try {
-    const {data } = await axios.get(
+    const { data } = await axios.get(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/listings`,
       {
         params: {
@@ -22,7 +22,7 @@ export const getListings = async (params?: GetListingsParams) => {
     );
 
     return data;
-  } catch (error) {
+  } catch {
     throw new Error("Failed to fetch listings");
   }
 };

@@ -10,11 +10,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import useCreateListingModal from "@/store/useCreateListingModal";
+import { useFilterModal } from "@/store/useFilterListingModal";
 
 const Navbar = () => {
   const { data: session, isPending } = authClient.useSession();
   const { openRegister, openLogin } = useAuthModal();
   const { open: openCreateListing } = useCreateListingModal();
+  const { open: openFilterModal } = useFilterModal();
 
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -47,7 +49,10 @@ const Navbar = () => {
         <Logo />
 
         {/* Center navbar */}
-        <div className="flex items-center gap-3 px-4 py-2 shadow-md border border-gray-200 rounded-full cursor-pointer">
+        <div
+          onClick={openFilterModal}
+          className="flex items-center gap-3 px-4 py-2 shadow-md border border-gray-200 rounded-full cursor-pointer"
+        >
           <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
             <Image
               src="/images/home.png"
