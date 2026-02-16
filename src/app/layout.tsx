@@ -7,6 +7,7 @@ import LoginModal from "@/modals/LoginModal";
 import { Toaster } from "react-hot-toast";
 import CreateListingModal from "@/modals/CreateListingModal";
 import FilterModal from "@/modals/FilterModal";
+import Footer from "@/components/footer/Footer";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -28,7 +29,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
         <Navbar />
-        <div className="mt-20 lg:mt-28 px-4 md:px-20 py-2">{children}</div>
+        <div className="min-h-[calc(100vh-72px)] lg:min-h-[calc(100vh-104px)] mt-20 lg:mt-28 px-4 md:px-20 py-2">
+          {children}
+        </div>
+        <Footer />
         <RegisterModal />
         <LoginModal />
         <CreateListingModal />
